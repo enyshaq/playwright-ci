@@ -1,0 +1,22 @@
+name: Playwright Tests          # имя workflow
+
+on:                             # КОГДА запускать
+  push:
+    branches: [ main ]          # при каждом push в ветку main
+  pull_request:
+    branches: [ main ]          # и при pull request в main
+
+jobs:
+  test:                         # одна задача — "test"
+    runs-on: ubuntu-latest      # на какой машине крутить (Linux-сервер)
+    steps:
+      - uses: actions/checkout@v4              # 1. скачать код репозитория
+      - uses: actions/setup-node@v4            # 2. установить Node.js
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm ci                            # 3. поставить зависимости
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps # 4. поставить браузеры
+      - name: Run Playwright tests
+        run: npx playwright test               # 5. 🎯 запустить тесты
