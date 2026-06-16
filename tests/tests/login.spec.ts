@@ -38,20 +38,17 @@ test('Заблокированный юзер видит ошибку', async ({
     await expect(page).not.toHaveURL(/inventory/);
 });
 
-test('Добавление товара в корзину', async ({ page }) => {
+test('Авторизация с неверным паролем', async ({ page }) => {
     
     await page.getByPlaceholder('Username').fill('standard_user');
-    await page.getByPlaceholder('Password').fill('secret_sauce');
+    await page.getByPlaceholder('Password').fill('wrong_pass');
     await page.getByRole('button', { name: 'Login' }).click();
     
     
-    await page.locator('[data-test="add-to-cart-sauce-labs-backpack"]').click();
+    await expect(
+        page.getByText('Epic sadface: Username and password do not match any user in this service')
+    ).toBeVisible();
     
    
-    await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
-    
-    
-    await expect(
-        page.locator('[data-test="remove-sauce-labs-backpack"]')
-    ).toBeVisible();
+    await expect(page).not.toHaveURL(/inventory/);
 });
