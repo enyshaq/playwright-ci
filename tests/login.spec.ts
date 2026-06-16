@@ -52,3 +52,15 @@ test('Авторизация с неверным паролем', async ({ page 
    
     await expect(page).not.toHaveURL(/inventory/);
 });
+
+test('Logout возвращает на страницу логина', async ({ page }) => {
+
+    await page.getByPlaceholder('Username').fill('standard_user');
+    await page.getByPlaceholder('Password').fill('secret_sauce');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await page.locator('#react-burger-menu-btn').click(); 
+    await page.locator('[data-test="logout-sidebar-link"]').click();
+
+    await expect(page).toHaveURL('https://www.saucedemo.com');
+
+});
